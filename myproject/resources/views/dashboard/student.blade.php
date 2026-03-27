@@ -6,6 +6,7 @@
     <title>Dashboard Sinh Viên</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         body {
             background: #f4f6f9;
@@ -59,6 +60,11 @@
             background: #ff5252;
             color: white;
         }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +73,8 @@
             <span class="navbar-brand">📚 Quản Lý Điểm Sinh Viên</span>
             <div class="ms-auto">
                 <span class="text-white me-3">👤 {{ Auth::user()->name }}</span>
-                <a href="{{ route('student.transcript') }}" class="text-white me-3">📊 Bảng Đạo Hạo</a>
+                <a href="{{ route('student.transcript') }}" class="text-white me-3">📚 Học Bạ</a>
+                <a href="{{ route('profile.edit') }}" class="text-white me-3">⚙️ Hồ Sơ</a>
                 <a href="{{ route('logout') }}" class="btn btn-logout btn-sm">🚪 Đăng Xuất</a>
             </div>
         </div>
@@ -116,6 +123,17 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📊 Biểu Đồ Điểm</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="gradeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-4">
@@ -158,8 +176,22 @@
                             </div>
                         </div>
 
+                        <div class="info-box">
+                            <div class="info-box-label">Xếp Hạng</div>
+                            <div class="info-box-value">
+                                @php
+                                    if ($gpa >= 8.5) $rank = '🏆 Xuất Sắc';
+                                    elseif ($gpa >= 8) $rank = '🥇 Giỏi';
+                                    elseif ($gpa >= 7) $rank = '🥈 Khá';
+                                    elseif ($gpa >= 5) $rank = '🥉 TBình';
+                                    else $rank = '📚 Yếu';
+                                @endphp
+                                {!! $rank !!}
+                            </div>
+                        </div>
+
                         <a href="{{ route('student.transcript') }}" class="btn btn-primary w-100">
-                            📋 Xem Bảng Đạo Hạo Chi Tiết
+                            📚 Xem Học Bạ Chi Tiết
                         </a>
                     </div>
                 </div>
@@ -168,5 +200,55 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const grades = @json(Auth::user()->grades);
+        if (grades.length > 0) {
+            const labels = grades.map(g => g.subject.name);
+            const scores = grades.map(g => g.score);
+            const colors = scores.map(s => {
+                if (s >= 8) return '#28a745';
+                if (s >= 7) return '#17a2b8';
+                if (s >= 5) return '#ffc107';
+                return '#dc3545';
+            });
+
+            const ctx = document.getElementById('gradeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Điểm Số',
+                        data: scores,
+                        backgroundColor: colors,
+                        borderRadius: 5,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

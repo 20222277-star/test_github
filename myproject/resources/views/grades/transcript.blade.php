@@ -65,7 +65,7 @@
 
     <div class="container mt-4">
         <div class="transcript-header">
-            <h2>📋 BẢNG ĐẠO HẠO</h2>
+            <h2>� HỌC BẠ</h2>
             <p><strong>Họ Tên:</strong> {{ $user->name }}</p>
             <p><strong>Email:</strong> {{ $user->email }}</p>
         </div>

@@ -5,6 +5,8 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +39,16 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [AuthController::class, 'showDashboard'])->name('dashboard');
+
+    // Profile & Đổi Mật Khẩu (tất cả users)
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.changePassword');
+
+    // User Management (chỉ Admin)
+    Route::resource('users', UserController::class)->except('destroy');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.resetPassword');
 
     // Routes cho Student CRUD (trang cũ)
     Route::get('/students', [StudentController::class, 'index']);
