@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Models\Subject;
 use App\Models\User;
+use App\Services\GradeWarningService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -129,6 +130,59 @@ class GradeController extends Controller
         $gpa = $this->calculateGPA($grades);
         
         return view('grades.transcript', compact('grades', 'gpa', 'user'));
+    }
+
+    /**
+     * Xem cảnh báo điểm thấp cho sinh viên
+     */
+    public function warningForStudent()
+    {
+        $user = Auth::user();
+        
+        if ($user->role_id != 3) {
+            return redirect('/')->with('error', 'Chỉ sinh viên có thể xem cảnh báo của mình');
+        }
+        
+        $service = new GradeWarningService();
+        $lowGrades = $service->getLowGradesForStudent($user);
+        $statistics = $service->getGradeStatisticsForStudent($user);
+        
+        return view('grades.warning-student', compact('lowGrades', 'statistics', 'user'));
+    }
+
+    /**
+     * Xem danh sách sinh viên có điểm thấp (cho giáo viên)
+     */
+    public function warningForTeacher()
+    {
+        $user = Auth::user();
+        
+        if ($user->role_id != 2 && $user->role_id != 1) {
+            return redirect('/')->with('error', 'Chỉ giáo viên hoặc admin có quyền xem');
+        }
+        
+        $service = new GradeWarningService();
+        
+        // Nếu là giáo viên, chỉ xem sinh viên của các môn họ dạy
+        // Nếu là admin, xem toàn bộ
+        if ($user->role_id == 2) {
+            $lowGrades = $service->getLowGradesForTeacher($user);
+            $criticalGrades = $service->getCriticalGradesForTeacher($user);
+            $studentsWithLowAverage = $service->getStudentsWithLowAverage($user);
+        } else {
+            // Admin xem tất cả
+            $lowGrades = Grade::where('score', '<', config('grades.warning_threshold'))
+                ->with('student', 'subject')
+                ->orderBy('score', 'asc')
+                ->get();
+            $criticalGrades = Grade::where('score', '<', config('grades.critical_threshold'))
+                ->with('student', 'subject')
+                ->orderBy('score', 'asc')
+                ->get();
+            $studentsWithLowAverage = collect(); // Empty for admin view
+        }
+        
+        return view('grades.warning-teacher', compact('lowGrades', 'criticalGrades', 'studentsWithLowAverage', 'user'));
     }
 
     private function calculateGPA($grades)

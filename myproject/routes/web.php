@@ -68,6 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/grades/{grade}', [GradeController::class, 'destroy'])->name('grades.destroy');
     Route::get('/transcript', [GradeController::class, 'transcript'])->name('student.transcript');
 
+    // ⚠️ CẢNH BÁO ĐIỂM THẤP - Low Grade Warning Routes
+    Route::get('/grades/warning/student', [GradeController::class, 'warningForStudent'])->name('grades.warning.student');
+    Route::get('/grades/warning/teacher', [GradeController::class, 'warningForTeacher'])->name('grades.warning.teacher');
+
     // Routes cho Subjects
     Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
     Route::get('/subjects/create', [SubjectController::class, 'create'])->name('subjects.create');

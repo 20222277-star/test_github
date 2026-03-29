@@ -73,6 +73,7 @@
             <span class="navbar-brand">📚 Quản Lý Điểm Sinh Viên</span>
             <div class="ms-auto">
                 <span class="text-white me-3">👤 {{ Auth::user()->name }}</span>
+                <a href="{{ route('grades.warning.student') }}" class="text-white me-3">⚠️ Cảnh Báo</a>
                 <a href="{{ route('student.transcript') }}" class="text-white me-3">📚 Học Bạ</a>
                 <a href="{{ route('profile.edit') }}" class="text-white me-3">⚙️ Hồ Sơ</a>
                 <a href="{{ route('logout') }}" class="btn btn-logout btn-sm">🚪 Đăng Xuất</a>
