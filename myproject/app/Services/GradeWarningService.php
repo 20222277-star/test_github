@@ -117,21 +117,33 @@ class GradeWarningService
      */
     public function getStudentsWithLowAverage(User $teacher, $threshold = 5.0)
     {
-        return Grade::whereHas('subject', function ($query) use ($teacher) {
+        $grades = Grade::whereHas('subject', function ($query) use ($teacher) {
             $query->where('teacher_id', $teacher->id);
         })
             ->with('student', 'subject')
-            ->get()
-            ->groupBy('student_id')
-            ->map(function ($grades) {
+            ->get();
+        
+        if ($grades->isEmpty()) {
+            return collect();
+        }
+        
+        return $grades->groupBy('student_id')
+            ->map(function ($gradeCollection) use ($threshold) {
+                $firstGrade = $gradeCollection->first();
+                
+                // Safety check
+                if (!$firstGrade || !$firstGrade->student) {
+                    return null;
+                }
+                
                 return [
-                    'student' => $grades->first()->student,
-                    'average' => round($grades->avg('score'), 2),
-                    'count' => $grades->count(),
+                    'student' => $firstGrade->student,
+                    'average' => round($gradeCollection->avg('score'), 2),
+                    'count' => $gradeCollection->count(),
                 ];
             })
             ->filter(function ($item) use ($threshold) {
-                return $item['average'] < $threshold;
+                return $item !== null && $item['average'] < $threshold;
             })
             ->sortBy('average')
             ->values();

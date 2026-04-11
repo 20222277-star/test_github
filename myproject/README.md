@@ -30,7 +30,6 @@
 - ✅ Quản lý điểm số và nhận xét
 - ✅ Hệ thống phân quyền người dùng
 - ✅ Đăng nhập/Đăng xuất an toàn
-- ✅ **⚠️ MỚI: Cảnh báo điểm thấp cho sinh viên và giáo viên**
 
 ---
 
@@ -262,53 +261,6 @@ myproject/
 
 ---
 
-## 🆕 Chức Năng Mới: ⚠️ Cảnh Báo Điểm Thấp
-
-Từ phiên bản mới, hệ thống có tính năng **cảnh báo điểm thấp** để hỗ trợ sinh viên và giáo viên theo dõi học tập.
-
-### **Cho Sinh Viên:**
-- 📊 Xem **danh sách môn học có điểm thấp** (dưới 5.0)
-- 🔴 Nhận cảnh báo **nguy hiểm** khi điểm dưới 3.0
-- 📈 Xem thống kê: số môn cảnh báo, điểm trung bình, tỷ lệ phần trăm
-- 💡 Nhận được lời kiến nghị cải thiện học tập
-
-**Truy cập:** Dashboard → Bấm nút `⚠️ Cảnh Báo`
-
-### **Cho Giáo Viên:**
-- 👁️ **Theo dõi danh sách sinh viên** có điểm thấp trong các môn họ dạy
-- 🔴 Xem **sinh viên nguy hiểm** (điểm < 3.0) cần hỗ trợ ngay
-- 📑 Xem **danh sách sinh viên có điểm trung bình thấp**
-- ✏️ **Chỉnh sửa điểm** trực tiếp từ trang cảnh báo
-
-**Truy cập:** Dashboard → Bấm nút `⚠️ Cảnh Báo`
-
-### **Thiết Cấu Hình Cảnh Báo:**
-
-File cấu hình: `config/grades.php`
-
-```php
-'warning_threshold' => 5.0,  // Mức điểm cảnh báo
-'critical_threshold' => 3.0, // Mức điểm nguy hiểm
-```
-
----
-
-### **Services** (app/Services/)
-
-| File | Chức Năng |
-|------|-----------|
-| `GradeWarningService.php` | **⭐ MỚI** - Service xử lý logic cảnh báo điểm thấp. Cung cấp các method: `getLowGradesForTeacher()`, `getLowGradesForStudent()`, `getCriticalGradesForTeacher()`, `getGradeStatisticsForStudent()`, `getWarningLevel()`, v.v. |
-
----
-
-### **Cấu Hình** (config/)
-
-| File | Chức Năng |
-|------|-----------|
-| `grades.php` | **⭐ MỚI** - Cấu hình mức điểm cảnh báo và nguy hiểm. Thiết lập ngưỡng: `warning_threshold` (mặc định 5.0) và `critical_threshold` (mặc định 3.0) |
-
----
-
 ## 📄 Mô Tả File Quan Trọng
 
 ### **Models** (app/Models/)
@@ -330,7 +282,7 @@ File cấu hình: `config/grades.php`
 | `AuthController.php` | Xử lý đăng nhập/đăng xuất, hiển thị dashboard theo vai trò |
 | `UserController.php` | Quản lý người dùng (tạo, chỉnh sửa, xóa, liệt kê) - chỉ Admin |
 | `StudentController.php` | Quản lý thông tin sinh viên (CRUD operations) |
-| `GradeController.php` | Quản lý điểm số, nhập điểm cho sinh viên, **cảnh báo điểm thấp** ⭐ |
+| `GradeController.php` | Quản lý điểm số, nhập điểm cho sinh viên |
 | `SubjectController.php` | Quản lý môn học (tạo, chỉnh sửa, xóa) |
 | `ProfileController.php` | Cho phép người dùng chỉnh sửa profile và đổi mật khẩu |
 

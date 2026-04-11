@@ -80,6 +80,21 @@
         .test-credentials strong {
             color: #667eea;
         }
+        .password-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 18px;
+            user-select: none;
+        }
+        .toggle-password:hover {
+            color: #764ba2;
+        }
     </style>
 </head>
 <body>
@@ -110,8 +125,11 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">Mật Khẩu</label>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                       id="password" name="password" required>
+                <div class="password-wrapper">
+                    <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                           id="password" name="password" required>
+                    <span class="toggle-password" id="togglePassword" onclick="togglePasswordVisibility()">👁️</span>
+                </div>
             </div>
 
             <button type="submit" class="btn-login">🔓 Đăng Nhập</button>
@@ -127,5 +145,19 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('togglePassword');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+            }
+        }
+    </script>
 </body>
 </html>

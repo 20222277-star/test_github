@@ -77,9 +77,7 @@
                         <tbody>
                             @foreach($lowGrades as $grade)
                                 @php
-                                    $warningLevel = \App\Services\GradeWarningService::class;
-                                    $service = new $warningLevel();
-                                    $level = $service->getWarningLevel($grade->score);
+                                    $level = (new \App\Services\GradeWarningService())->getWarningLevel($grade->score);
                                 @endphp
                                 <tr>
                                     <td>
