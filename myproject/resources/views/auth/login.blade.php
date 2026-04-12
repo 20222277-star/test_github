@@ -377,27 +377,6 @@
     </script>
 </body>
 </html>
- 
-        .alert-danger {
-            background: #fed7d7;
-            color: #742a2a;
-        }
-        
-        .alert ul {
-            margin: 8px 0 0 20px;
-            padding-left: 0;
-        }
-        
-        .alert li {
-            margin: 4px 0;
-        }
-        
-        .divider {
-            margin: 2rem 0;
-            text-align: center;
-            position: relative;
-            color: #a0aec0;
-            font-size: 12px;
             font-weight: 600;
         }
         
