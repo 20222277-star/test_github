@@ -1,31 +1,34 @@
 @extends('layouts.app')
 
-@section('title', 'Cảnh báo Điểm Thấp - Giáo Viên')
+@section('title', 'Cảnh Báo Điểm Thấp - Giáo Viên')
 
 @section('content')
-<div class="container mt-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h1>📊 Theo Dõi Sinh Viên - Điểm Thấp</h1>
-            <p class="text-muted">Quản lý danh sách sinh viên có điểm thấp để hỗ trợ kịp thời</p>
-        </div>
+<div>
+    <!-- Page Header -->
+    <div class="page-title mb-4">
+        <h1>
+            <i class="fas fa-chart-bar" style="color: var(--primary);"></i>
+            Theo Dõi Sinh Viên - Điểm Thấp
+        </h1>
+        <p class="page-subtitle">Quản lý danh sách sinh viên có điểm thấp để hỗ trợ kịp thời</p>
     </div>
 
     <!-- Critical Grades Section -->
     @if($criticalGrades->isNotEmpty())
-        <div class="card mb-4 border-danger">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0">🔴 Điểm Nguy Hiểm (< 3.0) - Cần Hỗ Trợ Ngay</h5>
+        <div class="card mb-4 border-danger border">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--danger) 0%, #e53e3e 100%);">
+                <i class="fas fa-exclamation-circle"></i> Điểm Nguy Hiểm (< 3.0) - Cần Hỗ Trợ Ngay
+                <span class="badge bg-white text-danger float-end">{{ $criticalGrades->count() }} sinh viên</span>
             </div>
             <div class="card-body">
-                <div class="alert alert-danger" role="alert">
-                    <strong>⚠️ Lưu Ý!</strong> Có <strong>{{ $criticalGrades->count() }}</strong> bản ghi điểm nguy hiểm. Các sinh viên cần sự hỗ trợ từ giáo viên.
+                <div class="alert alert-danger mb-3">
+                    <i class="fas fa-warning"></i>
+                    <strong> Lưu Ý!</strong> Có <strong>{{ $criticalGrades->count() }}</strong> bản ghi điểm nguy hiểm. Các sinh viên cần sự hỗ trợ từ giáo viên.
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-danger">
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
                                 <th>Sinh Viên</th>
                                 <th>Môn Học</th>
@@ -36,20 +39,22 @@
                         </thead>
                         <tbody>
                             @foreach($criticalGrades as $grade)
-                                <tr>
+                                <tr class="table-danger">
                                     <td>
                                         <strong class="text-danger">{{ $grade->student->name }}</strong>
                                         <br>
-                                        <small class="text-muted">{{ $grade->student->email }}</small>
+                                        <small style="color: #a0aec0;">{{ $grade->student->email }}</small>
                                     </td>
                                     <td>{{ $grade->subject->name }}</td>
                                     <td>
                                         <span class="badge bg-danger">{{ $grade->score }}/10</span>
                                     </td>
-                                    <td>Kỳ {{ $grade->semester }}</td>
+                                    <td>
+                                        <span class="badge bg-info">Kỳ {{ $grade->semester }}</span>
+                                    </td>
                                     <td>
                                         <a href="/grades/{{ $grade->id }}/edit" class="btn btn-sm btn-warning">
-                                            ✏️ Chỉnh Sửa
+                                            <i class="fas fa-edit"></i> Chỉnh Sửa
                                         </a>
                                     </td>
                                 </tr>
@@ -64,17 +69,18 @@
     <!-- Low Grades Section -->
     @if($lowGrades->isNotEmpty())
         <div class="card mb-4">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">🟠 Điểm Cảnh Báo (< 5.0)</h5>
+            <div class="card-header" style="background: linear-gradient(135deg, var(--warning) 0%, #ed8936 100%);">
+                <i class="fas fa-exclamation-triangle"></i> Điểm Cảnh Báo (< 5.0)
+                <span class="badge bg-white text-dark float-end">{{ $lowGrades->count() }} bản ghi</span>
             </div>
             <div class="card-body">
-                <div class="alert alert-warning" role="alert">
-                    Có <strong>{{ $lowGrades->count() }}</strong> bản ghi điểm cảnh báo.
+                <div class="alert alert-warning mb-3">
+                    <i class="fas fa-info-circle"></i> Có <strong>{{ $lowGrades->count() }}</strong> bản ghi điểm cảnh báo.
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-warning">
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
                                 <th>Sinh Viên</th>
                                 <th>Môn Học</th>
@@ -89,16 +95,18 @@
                                     <td>
                                         <strong>{{ $grade->student->name }}</strong>
                                         <br>
-                                        <small class="text-muted">{{ $grade->student->email }}</small>
+                                        <small style="color: #a0aec0;">{{ $grade->student->email }}</small>
                                     </td>
                                     <td>{{ $grade->subject->name }}</td>
                                     <td>
                                         <span class="badge bg-warning">{{ $grade->score }}/10</span>
                                     </td>
-                                    <td>Kỳ {{ $grade->semester }}</td>
+                                    <td>
+                                        <span class="badge bg-info">Kỳ {{ $grade->semester }}</span>
+                                    </td>
                                     <td>
                                         <a href="/grades/{{ $grade->id }}/edit" class="btn btn-sm btn-warning">
-                                            ✏️ Chỉnh Sửa
+                                            <i class="fas fa-edit"></i> Chỉnh Sửa
                                         </a>
                                     </td>
                                 </tr>
@@ -112,14 +120,15 @@
 
     <!-- Students with Low Average -->
     @if($studentsWithLowAverage->isNotEmpty())
-        <div class="card mb-4 border-info">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">📉 Sinh Viên Có Điểm Trung Bình Thấp</h5>
+        <div class="card mb-4">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--secondary) 0%, #6B46A6 100%);">
+                <i class="fas fa-chart-line"></i> Sinh Viên Có Điểm Trung Bình Thấp
+                <span class="badge bg-white text-dark float-end">{{ $studentsWithLowAverage->count() }} sinh viên</span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-info">
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
                                 <th>Sinh Viên</th>
                                 <th>Điểm Trung Bình</th>
@@ -133,7 +142,7 @@
                                     <td>
                                         <strong>{{ $item['student']->name }}</strong>
                                         <br>
-                                        <small class="text-muted">{{ $item['student']->email }}</small>
+                                        <small style="color: #a0aec0;">{{ $item['student']->email }}</small>
                                     </td>
                                     <td>
                                         @if($item['average'] < 3.0)
@@ -144,7 +153,9 @@
                                             <span class="badge bg-info">{{ $item['average'] }}/10</span>
                                         @endif
                                     </td>
-                                    <td>{{ $item['count'] }}</td>
+                                    <td>
+                                        <span style="color: var(--dark); font-weight: 600;">{{ $item['count'] }}</span>
+                                    </td>
                                     <td>
                                         @if($item['average'] < 3.0)
                                             <span class="badge bg-danger">🔴 Nguy Hiểm</span>
@@ -163,37 +174,70 @@
 
     <!-- No Low Grades Message -->
     @if($lowGrades->isEmpty() && $criticalGrades->isEmpty())
-        <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">✅ Tuyệt vời!</h4>
-            <p>Tất cả sinh viên của bạn đều có điểm tốt. Hãy tiếp tục khuyến khích họ!</p>
+        <div class="card border-0 bg-success bg-opacity-10">
+            <div class="card-body text-center">
+                <h3 class="text-success mb-2">✅ Tuyệt Vời!</h3>
+                <p class="mb-0">Tất cả sinh viên của bạn đều có điểm tốt. Hãy tiếp tục khuyến khích họ!</p>
+            </div>
         </div>
     @endif
 
     <!-- Recommendations -->
-    <div class="card mt-4 bg-light">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">💡 Kiến Nghị Cho Giáo Viên</h5>
+    <div class="card mt-4" style="background: #f7fafc;">
+        <div class="card-header" style="background: linear-gradient(135deg, var(--dark) 0%, #1a202c 100%);">
+            <i class="fas fa-lightbulb"></i> Kiến Nghị Cho Giáo Viên
         </div>
         <div class="card-body">
-            <ul>
-                <li>📞 <strong>Liên Hệ Sinh Viên:</strong> Gọi hoặc gửi email để tìm hiểu nguyên nhân điểm thấp</li>
-                <li>🎓 <strong>Cung Cấp Hỗ Trợ Học Tập:</strong> Đưa ra bài tập bổ sung, hướng dẫn thêm</li>
-                <li>📅 <strong>Tổ Chức Buổi Ôn Tập:</strong> Để sinh viên có đủ thời gian ôn tập trước kỳ thi</li>
-                <li>🤔 <strong>Phân Tích Nguyên Nhân:</strong> Xác định xem sinh viên không hiểu phần nào</li>
-                <li>🎯 <strong>Lập Kế Hoạch Cải Thiện:</strong> Thiết lập mục tiêu rõ ràng cùng sinh viên</li>
-            </ul>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div style="padding: 1rem; background: white; border-radius: 8px; border-left: 4px solid var(--primary);">
+                        <h5 style="color: var(--dark); margin-bottom: 0.5rem;">
+                            <i class="fas fa-phone"></i> Liên Hệ Sinh Viên
+                        </h5>
+                        <p class="mb-0" style="font-size: 13px; color: #718096;">
+                            Gọi hoặc gửi email để tìm hiểu nguyên nhân điểm thấp của sinh viên
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div style="padding: 1rem; background: white; border-radius: 8px; border-left: 4px solid var(--success);">
+                        <h5 style="color: var(--dark); margin-bottom: 0.5rem;">
+                            <i class="fas fa-graduation-cap"></i> Cung Cấp Hỗ Trợ Học Tập
+                        </h5>
+                        <p class="mb-0" style="font-size: 13px; color: #718096;">
+                            Đưa ra bài tập bổ sung, hướng dẫn thêm để giúp sinh viên hiểu tốt hơn
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div style="padding: 1rem; background: white; border-radius: 8px; border-left: 4px solid var(--warning);">
+                        <h5 style="color: var(--dark); margin-bottom: 0.5rem;">
+                            <i class="fas fa-calendar"></i> Tổ Chức Buổi Ôn Tập
+                        </h5>
+                        <p class="mb-0" style="font-size: 13px; color: #718096;">
+                            Cấp thêm thời gian ôn tập trước kỳ thi để sinh viên chuẩn bị tốt hơn
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div style="padding: 1rem; background: white; border-radius: 8px; border-left: 4px solid var(--danger);">
+                        <h5 style="color: var(--dark); margin-bottom: 0.5rem;">
+                            <i class="fas fa-chart-pie"></i> Lập Kế Hoạch Cải Thiện
+                        </h5>
+                        <p class="mb-0" style="font-size: 13px; color: #718096;">
+                            Thiết lập mục tiêu rõ ràng cùng sinh viên và theo dõi tiến độ
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Back Button -->
-    <div class="mt-4">
-        <a href="/grades" class="btn btn-secondary">← Quay lại Danh sách Điểm</a>
+    <div class="mt-4 pb-3">
+        <a href="{{ route('grades.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Điểm
+        </a>
     </div>
 </div>
-
-<style>
-    .card {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-</style>
 @endsection

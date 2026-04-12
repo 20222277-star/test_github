@@ -1,71 +1,70 @@
 @extends('layouts.app')
 
-@section('title', 'Cảnh báo Điểm Thấp - Sinh Viên')
+@section('title', 'Cảnh Báo Điểm Thấp - Sinh Viên')
 
 @section('content')
-<div class="container mt-4">
-    <!-- Header -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <h1>⚠️ Cảnh Báo Điểm Thấp</h1>
-            <p class="text-muted">Theo dõi tình trạng học tập của bạn</p>
-        </div>
+<div>
+    <!-- Page Header -->
+    <div class="page-title mb-4">
+        <h1>
+            <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+            Cảnh Báo Điểm Thấp
+        </h1>
+        <p class="page-subtitle">Theo dõi tình trạng học tập của bạn</p>
     </div>
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h5 class="card-title">📊 Tổng Số Môn</h5>
-                    <h2 class="text-primary">{{ $statistics['total'] }}</h2>
-                </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-box">
+                <div class="stat-label">📊 Tổng Số Môn</div>
+                <div class="stat-value">{{ $statistics['total'] }}</div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-warning bg-opacity-10">
-                <div class="card-body">
-                    <h5 class="card-title">🟠 Điểm Cảnh Báo</h5>
-                    <h2 class="text-warning">{{ $statistics['low_grades_count'] }}</h2>
-                    <small class="text-muted">(< 5.0 điểm)</small>
-                </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-box warning">
+                <div class="stat-label">🟠 Điểm Cảnh Báo</div>
+                <div class="stat-value">{{ $statistics['low_grades_count'] }}</div>
+                <small style="color: #a0aec0;">< 5.0 điểm</small>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-danger bg-opacity-10">
-                <div class="card-body">
-                    <h5 class="card-title">🔴 Điểm Nguy Hiểm</h5>
-                    <h2 class="text-danger">{{ $statistics['critical_grades_count'] }}</h2>
-                    <small class="text-muted">(< 3.0 điểm)</small>
-                </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-box danger">
+                <div class="stat-label">🔴 Điểm Nguy Hiểm</div>
+                <div class="stat-value">{{ $statistics['critical_grades_count'] }}</div>
+                <small style="color: #a0aec0;">< 3.0 điểm</small>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-success bg-opacity-10">
-                <div class="card-body">
-                    <h5 class="card-title">📈 Điểm Trung Bình</h5>
-                    <h2 class="text-success">{{ $statistics['average_score'] }}/10</h2>
-                </div>
+        
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="stat-box success">
+                <div class="stat-label">📈 Điểm Trung Bình</div>
+                <div class="stat-value">{{ $statistics['average_score'] }}</div>
+                <small style="color: #a0aec0;">/10</small>
             </div>
         </div>
     </div>
 
     <!-- Alert if no low grades -->
     @if($lowGrades->isEmpty())
-        <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">✅ Tuyệt vời!</h4>
-            <p>Bạn không có điểm nào dưới mức cảnh báo. Hãy tiếp tục duy trì thành tích tốt!</p>
+        <div class="card border-0 bg-success bg-opacity-10">
+            <div class="card-body text-center">
+                <h3 class="text-success mb-2">✅ Tuyệt Vời!</h3>
+                <p class="mb-0">Bạn không có điểm nào dưới mức cảnh báo. Hãy tiếp tục duy trì thành tích tốt!</p>
+            </div>
         </div>
     @else
         <!-- Low Grades Table -->
         <div class="card">
-            <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">📋 Danh Sách Môn Học Có Điểm Thấp</h5>
+            <div class="card-header">
+                <i class="fas fa-list-check"></i> Danh Sách Môn Học Có Điểm Thấp
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+                    <table class="table">
+                        <thead>
                             <tr>
                                 <th>Môn Học</th>
                                 <th>Điểm</th>
@@ -84,13 +83,15 @@
                                         <strong>{{ $grade->subject->name }}</strong>
                                     </td>
                                     <td>
-                                        <span class="badge bg-{{ $level['class'] }}">
+                                        <span class="badge" style="background: var(--{{ $level['class'] === 'danger' ? 'danger' : ($level['class'] === 'warning' ? 'warning' : 'primary') }});">
                                             {{ $grade->score }} / 10
                                         </span>
                                     </td>
-                                    <td>Kỳ {{ $grade->semester }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $level['class'] }}">
+                                        <span class="badge bg-info">Kỳ {{ $grade->semester }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge" style="background: var(--{{ $level['class'] === 'danger' ? 'danger' : 'warning' }});">
                                             {{ $level['icon'] }} {{ $level['label'] }}
                                         </span>
                                     </td>
@@ -111,34 +112,61 @@
 
         <!-- Advice Section -->
         <div class="card mt-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">💡 Lời Kiến Nghị</h5>
+            <div class="card-header">
+                <i class="fas fa-lightbulb"></i> Lời Kiến Nghị Cải Thiện
             </div>
             <div class="card-body">
-                <ul>
-                    <li>📖 <strong>Ôn tập lại kiến thức:</strong> Tập trung vào các phần trọng điểm</li>
-                    <li>🤝 <strong>Gặp giáo viên:</strong> Yêu cầu giáo viên giải thích những phần khó</li>
-                    <li>👥 <strong>Học nhóm:</strong> Cùng bạn bè thảo luận và chia sẻ kiến thức</li>
-                    <li>📝 <strong>Làm thêm bài tập:</strong> Luyện tập thêm để hiểu sâu hơn</li>
-                    <li>⏰ <strong>Quản lý thời gian:</strong> Học đều đặn, không nên học dồn</li>
-                </ul>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; margin-bottom: 1rem;">
+                            <h5 style="color: var(--primary); margin-bottom: 0.5rem;">
+                                <i class="fas fa-book"></i> Ôn Tập Lại Kiến Thức
+                            </h5>
+                            <p class="mb-0" style="font-size: 13px; color: #718096;">
+                                Tập trung vào các phần trọng điểm và ôn lại những kiến thức chưa nắm vững
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; margin-bottom: 1rem;">
+                            <h5 style="color: var(--primary); margin-bottom: 0.5rem;">
+                                <i class="fas fa-handshake"></i> Gặp Giáo Viên
+                            </h5>
+                            <p class="mb-0" style="font-size: 13px; color: #718096;">
+                                Yêu cầu giáo viên giải thích chi tiết những phần bạn không hiểu
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; margin-bottom: 1rem;">
+                            <h5 style="color: var(--primary); margin-bottom: 0.5rem;">
+                                <i class="fas fa-users"></i> Học Nhóm
+                            </h5>
+                            <p class="mb-0" style="font-size: 13px; color: #718096;">
+                                Cùng bạn bè thảo luận và chia sẻ kiến thức để hiểu sâu hơn
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="padding: 1rem; background: #f7fafc; border-radius: 8px; margin-bottom: 1rem;">
+                            <h5 style="color: var(--primary); margin-bottom: 0.5rem;">
+                                <i class="fas fa-pencil"></i> Luyện Tập Thêm
+                            </h5>
+                            <p class="mb-0" style="font-size: 13px; color: #718096;">
+                                Làm bài tập bổ sung để thực hành và nắm vững kiến thức
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     @endif
 
     <!-- Back Button -->
-    <div class="mt-4">
-        <a href="/grades" class="btn btn-secondary">← Quay lại Danh sách Điểm</a>
+    <div class="mt-4 pb-3">
+        <a href="{{ route('grades.index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách Điểm
+        </a>
     </div>
 </div>
-
-<style>
-    .card {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .bg-opacity-10 {
-        background-color: rgba(var(--bs-body-color-rgb), 0.1);
-    }
-</style>
 @endsection
